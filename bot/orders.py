@@ -3,7 +3,7 @@ from binance.exceptions import BinanceAPIException
 
 logger = logging.getLogger(__name__)
 
-def place_futures_order(binance_client, symbol: str, side: str, order_type: str, quantity: float, price: float = None):
+def place_future_orders(binance_client, symbol: str, side: str, order_type: str, quantity: float, price: float = None):
     symbol = symbol.upper()
     side = side.upper()
     order_type = order_type.upper()
