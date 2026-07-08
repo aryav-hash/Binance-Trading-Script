@@ -30,11 +30,25 @@ def validate_order_type(order_type: str) -> str:
         raise ValueError("Order type must be a string: 'MARKET' or 'LIMIT'.")
         
     clean_type = order_type.strip().upper()
-    if clean_type not in ['MARKET', 'LIMIT']:
-        raise ValueError(f"Invalid order type: '{order_type}'. Supported types are 'MARKET' or 'LIMIT'.")
+    if clean_type not in ['MARKET', 'LIMIT', 'STOP']:
+        raise ValueError(f"Invalid order type: '{order_type}'. Supported types are 'MARKET', 'LIMIT', 'STOP'.")
         
     return clean_type
 
+def validate_stop_price(stop_price, order_type: str):
+    if order_type != 'STOP':
+        return None
+    if stop_price is None:
+        raise ValueError("Stop Price (--stop-price) is strictly required for STOP orders.")
+    
+    try:
+        sp_float = float(stop_price)
+    except (ValueError, TypeError):
+        raise ValueError(f"Invalid Stop Price: '{stop_price}'. Must be a valid number.")
+    
+    if sp_float <= 0:
+        raise ValueError(f"Invalid Stop Price: {sp_float}. Must be greater than 0.")
+    return sp_float
 
 def validate_quantity(quantity) -> float:
     try:
@@ -48,7 +62,7 @@ def validate_quantity(quantity) -> float:
     return qty_float
 
 
-def validate_price(price, order_type: str):
+def validate_price(price, order_type: str) -> float | None:
     if order_type == 'MARKET':
         return None
         
@@ -66,7 +80,7 @@ def validate_price(price, order_type: str):
     return price_float
 
 
-def validate_all_inputs(symbol: str, side: str, order_type: str, quantity, price=None) -> dict:
+def validate_all_inputs(symbol: str, side: str, order_type: str, quantity, price=None, stop_price=None) -> dict:
     logger.info("Executing local input validation...")
     
     try:
@@ -75,6 +89,7 @@ def validate_all_inputs(symbol: str, side: str, order_type: str, quantity, price
         validated_type = validate_order_type(order_type)
         validated_qty = validate_quantity(quantity)
         validated_price = validate_price(price, validated_type)
+        validated_stop_price = validate_stop_price(stop_price, validated_type)
         
         logger.info("Local input validation passed successfully.")
         
@@ -83,7 +98,8 @@ def validate_all_inputs(symbol: str, side: str, order_type: str, quantity, price
             "side": validated_side,
             "type": validated_type,
             "quantity": validated_qty,
-            "price": validated_price
+            "price": validated_price,
+            "stop_price": validated_stop_price
         }
         
     except ValueError as e:

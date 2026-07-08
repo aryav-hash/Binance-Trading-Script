@@ -4,7 +4,7 @@ from binance.exceptions import BinanceAPIException
 
 logger = logging.getLogger(__name__)
 
-def place_future_orders(binance_client, symbol: str, side: str, order_type: str, quantity: float, price: float = None):
+def place_future_orders(binance_client, symbol: str, side: str, order_type: str, quantity: float, price: float | None = None, stop_price: float | None = None):
     symbol = symbol.upper()
     side = side.upper()
     order_type = order_type.upper()
@@ -16,11 +16,16 @@ def place_future_orders(binance_client, symbol: str, side: str, order_type: str,
         'quantity': quantity
     }
 
-    if order_type == 'LIMIT':
+    if order_type in ['LIMIT', 'STOP']:
         if not price:
-            raise ValueError("A target price must be specified for limit orders.")
+            raise ValueError(f"A target price must be specified for {order_type} orders.")
         order_params['price'] = price
         order_params['timeInForce'] = 'GTC'
+
+    if order_type == 'STOP':
+        if not stop_price:
+            raise ValueError("A stop price is requested for STOP orders.")
+        order_params['stopPrice'] = stop_price
 
     print("\n" + "=" * 45)
     print("  ORDER REQUEST SUMMARY  ")
@@ -29,15 +34,17 @@ def place_future_orders(binance_client, symbol: str, side: str, order_type: str,
     print(f"  Action Side: {side}")
     print(f"  Order Type:  {order_type}")
     print(f"  Size/Quantity: {quantity}")
-    if order_type == "LIMIT":
+    if order_type in ['LIMIT', 'STOP']:
         print(f"  Target Price: {price}")
+    if order_type == 'STOP':
+        print(f"  Stop Price:  {stop_price}")
     print("=" * 45)
 
     logger.info(f"Sending order payload to Binance Futures API: {order_params}")
 
     try:
         response = binance_client.futures_create_order(**order_params)
-        order_id = response.get('orderId')
+        order_id = response.get('orderId') or response.get('algoId') or response.get('clientOrderId', 'UNKNOWN')
         logger.info(f"Order successfully placed. Raw API Response: {response}")
 
         if order_type == 'MARKET':

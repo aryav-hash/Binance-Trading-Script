@@ -21,6 +21,7 @@ def main():
     parser.add_argument("--type", "-t", required=True, help="Order type: MARKET or LIMIT.")
     parser.add_argument("--quantity", "-q", required=True, help="The volume size of the asset to trade.")
     parser.add_argument("--price", "-p", required=False, default=None, help="Target price (Mandatory for LIMIT).")
+    parser.add_argument("--stop-price", "-sp", required=False, default=None, help="The trigger price (Mandatory for STOP).")
 
     args = parser.parse_args()
 
@@ -30,7 +31,8 @@ def main():
             side=args.side,
             order_type=args.type,
             quantity=args.quantity,
-            price=args.price
+            price=args.price,
+            stop_price=args.stop_price
         )
     except ValueError as e:
         print(f"\n[VALIDATION FAILED] {str(e)}")
@@ -52,7 +54,8 @@ def main():
         side=validated_inputs["side"],
         order_type=validated_inputs["type"],
         quantity=validated_inputs["quantity"],
-        price=validated_inputs["price"]
+        price=validated_inputs["price"],
+        stop_price=validated_inputs.get("stop_price")
     )
 
 if __name__ == "__main__":
