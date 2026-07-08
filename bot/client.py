@@ -18,5 +18,5 @@ class BinanceTestnetClient:
 
         logger.info("Connected to the Binance Future Testnet.")
 
-def get_client(self):
-    return self.client
+    def get_client(self):
+        return self.client
