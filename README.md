@@ -75,3 +75,13 @@ All internal runtime operations, input validation phases, and remote exchange AP
 [2026-07-08 19:38:02] INFO [bot.orders:57] Order updated. New Response: {'orderId': 20124500736, 'symbol': 'BTCUSDT', 'status': 'FILLED', 'clientOrderId': 'x-Cb7ytekJa3eb6375d129435aec7bfe', 'price': '0.00', 'avgPrice': '61981.200000', 'origQty': '0.0100', 'executedQty': '0.0100', 'cumQuote': '619.812000', 'timeInForce': 'GTC', 'type': 'MARKET', 'reduceOnly': False, 'closePosition': False, 'side': 'BUY', 'positionSide': 'BOTH', 'stopPrice': '0.00', 'workingType': 'CONTRACT_PRICE', 'priceProtect': False, 'origType': 'MARKET', 'priceMatch': 'NONE', 'selfTradePreventionMode': 'EXPIRE_MAKER', 'goodTillDate': 0, 'time': 1783519680097, 'updateTime': 1783519680097}
 ```
 
+### 2. Successful Limit Order Pipeline
+```text
+[2026-07-08 19:38:25] INFO [cli_entry:13] Trading bot CLI tool executed.
+[2026-07-08 19:38:25] INFO [bot.validators:84] Executing local input validation...
+[2026-07-08 19:38:25] INFO [bot.validators:94] Local input validation passed successfully.
+[2026-07-08 19:38:25] INFO [bot.client:14] Making connection to Binance ....
+[2026-07-08 19:38:26] INFO [bot.client:19] Connected to the Binance Future Testnet.
+[2026-07-08 19:38:26] INFO [bot.orders:43] Sending order payload to Binance Futures API: {'symbol': 'BTCUSDT', 'side': 'SELL', 'type': 'LIMIT', 'quantity': 0.01, 'price': 65000.0, 'timeInForce': 'GTC'}
+[2026-07-08 19:38:26] INFO [bot.orders:48] Order successfully placed. Raw API Response: {'orderId': 20124590732, 'symbol': 'BTCUSDT', 'status': 'NEW', 'clientOrderId': 'x-Cb7ytekJd732e915373ad3af71ab15', 'price': '65000.00', 'origQty': '0.0100', 'executedQty': '0.0000', 'cumQty': '0.0000', 'timeInForce': 'GTC', 'type': 'LIMIT', 'reduceOnly': False, 'closePosition': False, 'side': 'SELL', 'positionSide': 'BOTH', 'stopPrice': '0.00', 'workingType': 'CONTRACT_PRICE', 'priceProtect': False, 'origType': 'LIMIT', 'priceMatch': 'NONE', 'selfTradePreventionMode': 'EXPIRE_MAKER', 'goodTillDate': 0, 'updateTime': 1783519706295}
+```
