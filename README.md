@@ -10,8 +10,8 @@ trading_bot/
 │   ├── __init__.py          # Marks the directory as a Python package
 │   ├── client.py            # Authenticates and configures the Binance Testnet Client
 │   ├── logging_config.py    # Global logger implementation (Rotating file handler)
-│   ├── orders.py            # Core trade execution engine (MARKET, LIMIT, STOP)
-│   └── validators.py        # Defensive pre-flight user input validation
+│   ├── orders.py            # Trade execution engine (MARKET, LIMIT, STOP)
+│   └── validators.py        # User input validation
 ├── logs/
 │   └── trading_bot.log      # Auto-generated runtime logs (Git ignored)
 ├── .env                     # Private environment API credentials (Git ignored)
