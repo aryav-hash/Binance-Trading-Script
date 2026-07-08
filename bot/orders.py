@@ -1,3 +1,4 @@
+import time
 import logging
 from binance.exceptions import BinanceAPIException
 
@@ -36,10 +37,18 @@ def place_future_orders(binance_client, symbol: str, side: str, order_type: str,
 
     try:
         response = binance_client.futures_create_order(**order_params)
-
+        order_id = response.get('orderId')
         logger.info(f"Order successfully placed. Raw API Response: {response}")
 
-        order_id = response.get('orderId')
+        if order_type == 'MARKET':
+            print("[System] Waiting 2 seconds for exchange matching engine.... ")
+            time.sleep(2)
+            response = binance_client.futures_get_order(
+                symbol=symbol,
+                orderId=order_id
+            )
+            logger.info(f"Order updated. New Response: {response}")
+        
         status = response.get('status')
         executed_qty = response.get('executedQty', '0.0')
         avg_price = response.get('avgPrice', '0.0')
